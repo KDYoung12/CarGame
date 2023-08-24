@@ -10,7 +10,7 @@ public class TopDownCarController : MonoBehaviour
     // 가속력
     public float accelerationFactor = 30.0f;
     // 회전력
-    public float turnFactor = 3.5f;
+    public float turnFactor = 3f;
     // 최고 속도
     public float maxSpeed = 20f;
 
@@ -45,7 +45,7 @@ public class TopDownCarController : MonoBehaviour
         if (carRigidbody2D.drag > 2.9f)
             turnFactor = 0.5f;
         else
-            turnFactor = 1.5f;
+            turnFactor = 3f;
     }
 
     private void FixedUpdate()
@@ -97,9 +97,6 @@ public class TopDownCarController : MonoBehaviour
         // Update the rotation angle based on input
         rotationAngle -= steeringInput * turnFactor * minSpeedBeforeAllowTurningFactor;
 
-        // Update the rotation angle based on input
-        rotationAngle -= steeringInput * turnFactor;
-
         // Apply Steering by rotating the car object
         carRigidbody2D.MoveRotation(rotationAngle);
     }
@@ -107,8 +104,8 @@ public class TopDownCarController : MonoBehaviour
     void killOrthogonalVelocity()
     {
         // #.. forward move Speed
-        Vector2 forwardVelocity = transform.up * Vector2.Dot(carRigidbody2D.velocity, transform.up);
-        Vector2 rightVelocity = transform.right * Vector2.Dot(carRigidbody2D.velocity, transform.right);
+        Vector2 forwardVelocity = transform.up.normalized * Vector2.Dot(carRigidbody2D.velocity, transform.up);
+        Vector2 rightVelocity = transform.right.normalized * Vector2.Dot(carRigidbody2D.velocity, transform.right);
 
         carRigidbody2D.velocity = forwardVelocity + rightVelocity * driftFactor;
     }
